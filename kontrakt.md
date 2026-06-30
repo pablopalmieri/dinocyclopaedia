@@ -103,7 +103,7 @@ Styl pisarski: pseudo-naukowy, z humorem, ale NIE infantylny. Subtelna makabra d
 ## 5. Struktura repozytorium GitHub
 
 ```
-dinocyclopedia/
+dinocyclopaedia/
 ├── template.html          ← bazowy szablon HTML (modyfikowany przez Pawła)
 ├── grafiki/
 │   ├── glazozer.jpg
