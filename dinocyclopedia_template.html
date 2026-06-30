@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas Dinozaurów – Wielorybnik Rozpęczniakowy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cormorant+Infant:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --cream: #f5f0e0;
+    --parchment: #e8dfc4;
+    --green-deep: #2a4a35;
+    --green-mid: #3d6b4f;
+    --green-light: #5a8a6a;
+    --green-pale: #c8dbc8;
+    --gold: #9a7b3a;
+    --gold-light: #c9a84c;
+    --ink: #1a1a12;
+    --ink-mid: #3a3428;
+    --ink-muted: #6b5e48;
+    --ink-faint: #9a8e78;
+    --red-subtle: #8b3a2a;
+    --font-display: 'IM Fell English', 'Georgia', serif;
+    --font-serif: 'Cormorant Garamond', 'Georgia', serif;
+    --font-text: 'Cormorant Infant', 'Georgia', serif;
+  }
+
+  body {
+    background: #b8b0a0;
+    font-family: var(--font-text);
+    color: var(--ink);
+  }
+
+  .spread {
+    display: flex;
+    width: 594mm;
+    height: 210mm;
+    margin: 0 auto;
+  }
+
+  .page {
+    width: 297mm;
+    height: 210mm;
+    background: var(--cream);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 15% 15%, rgba(200,219,200,0.2) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 85%, rgba(154,123,58,0.07) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-border-outer {
+    position: absolute;
+    inset: 5mm;
+    border: 0.7pt solid var(--gold);
+    pointer-events: none;
+    z-index: 10;
+  }
+  .page-border-inner {
+    position: absolute;
+    inset: 7.5mm;
+    border: 0.25pt solid rgba(154,123,58,0.4);
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Narożniki SVG */
+  .corner { position: absolute; width: 14mm; height: 14mm; z-index: 11; }
+  .corner svg { width: 100%; height: 100%; }
+  .corner-tl { top: 3mm; left: 3mm; }
+  .corner-tr { top: 3mm; right: 3mm; transform: scaleX(-1); }
+  .corner-bl { bottom: 3mm; left: 3mm; transform: scaleY(-1); }
+  .corner-br { bottom: 3mm; right: 3mm; transform: scale(-1,-1); }
+
+  .page-content {
+    position: relative;
+    z-index: 5;
+    padding: 11mm 11mm 9mm 13mm;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* HEADER */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 0.8pt solid var(--gold);
+    padding-bottom: 1.5mm;
+    margin-bottom: 2.5mm;
+    flex-shrink: 0;
+  }
+  .chapter-label {
+    font-family: var(--font-serif);
+    font-size: 7pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+  }
+  .page-number {
+    font-family: var(--font-serif);
+    font-size: 7pt;
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+
+  /* SEPARATORY */
+  .divider {
+    width: 100%;
+    height: 0.3pt;
+    background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), var(--gold-light), transparent);
+    margin: 1.8mm 0;
+    flex-shrink: 0;
+  }
+  .divider-ornament {
+    display: flex;
+    align-items: center;
+    gap: 2mm;
+    margin: 1.5mm 0;
+    flex-shrink: 0;
+  }
+  .divider-ornament::before,
+  .divider-ornament::after {
+    content: '';
+    flex: 1;
+    height: 0.3pt;
+  }
+  .divider-ornament::before { background: linear-gradient(90deg, transparent, var(--gold)); }
+  .divider-ornament::after  { background: linear-gradient(90deg, var(--gold), transparent); }
+  .divider-ornament span { font-size: 7.5pt; color: var(--gold); line-height: 1; }
+
+  /* ===============================
+     STRONA LEWA
+     =============================== */
+  .page-left .page-content {
+    padding: 11mm 10mm 9mm 13mm;
+  }
+
+  .illustration-frame {
+    position: relative;
+    width: 100%;
+    flex-shrink: 0;
+    margin-bottom: 2mm;
+  }
+  .illustration-frame img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+    border: 0.5pt solid var(--gold);
+  }
+  .illustration-frame::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: -5mm;
+    width: 1pt;
+    background: linear-gradient(180deg, transparent, var(--green-light), var(--gold-light), var(--green-light), transparent);
+  }
+  .illustration-caption {
+    text-align: right;
+    font-family: var(--font-serif);
+    font-size: 5.5pt;
+    color: var(--ink-faint);
+    font-style: italic;
+    margin-top: 0.8mm;
+    letter-spacing: 0.04em;
+  }
+
+  /* Nazwa gatunku */
+  .species-name-block { margin-bottom: 1mm; flex-shrink: 0; }
+  .name-common {
+    font-family: var(--font-display);
+    font-size: 14pt;
+    color: var(--green-deep);
+    line-height: 1.15;
+    display: block;
+  }
+  .name-latin {
+    font-family: var(--font-serif);
+    font-size: 9pt;
+    font-style: italic;
+    color: var(--ink-mid);
+    display: block;
+    margin-top: 0.5mm;
+    letter-spacing: 0.02em;
+  }
+
+  /* Etymologia */
+  .etymology-block { margin-bottom: 1mm; flex-shrink: 0; }
+  .block-label {
+    font-family: var(--font-serif);
+    font-size: 5.5pt;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5mm;
+  }
+  .etymology-text {
+    font-family: var(--font-serif);
+    font-size: 7pt;
+    color: var(--ink-muted);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* Systematyka */
+  .taxonomy-block {
+    background: rgba(200,219,200,0.22);
+    border-left: 1.8pt solid var(--green-mid);
+    padding: 1.5mm 2mm 1.5mm 2.5mm;
+    margin-bottom: 1.5mm;
+    flex-shrink: 0;
+  }
+  .taxonomy-table { width: 100%; border-collapse: collapse; }
+  .taxonomy-table tr td {
+    font-family: var(--font-serif);
+    font-size: 6.5pt;
+    color: var(--ink-mid);
+    line-height: 1.55;
+    padding: 0;
+  }
+  .taxonomy-table tr td:first-child {
+    color: var(--ink-faint);
+    width: 30%;
+    font-style: italic;
+    padding-right: 1mm;
+  }
+  .taxonomy-table tr td:last-child { font-weight: 500; }
+
+  /* Środowisko + Dieta + Wymiary — siatka 2x2 */
+  .data-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1.5mm;
+    margin-bottom: 1.5mm;
+    flex-shrink: 0;
+  }
+  .data-cell {
+    background: rgba(154,123,58,0.06);
+    border: 0.3pt solid rgba(154,123,58,0.28);
+    padding: 1.2mm 1.8mm;
+  }
+  .data-cell-wide {
+    grid-column: 1 / -1;
+  }
+  .data-label {
+    font-family: var(--font-serif);
+    font-size: 5.5pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.4mm;
+  }
+  .data-value {
+    font-family: var(--font-serif);
+    font-size: 7pt;
+    color: var(--ink-mid);
+    line-height: 1.4;
+  }
+  .data-value em {
+    color: var(--ink-muted);
+    font-style: italic;
+    font-size: 6.5pt;
+  }
+
+  /* Ciekawostka */
+  .curiosity-block {
+    background: rgba(139,58,42,0.05);
+    border: 0.5pt solid rgba(139,58,42,0.22);
+    padding: 2mm 2.5mm 1.8mm;
+    position: relative;
+    margin-top: auto;
+    flex-shrink: 0;
+  }
+  .curiosity-block::before {
+    content: '⚑';
+    position: absolute;
+    top: -3mm; left: 3mm;
+    font-size: 7.5pt;
+    color: var(--red-subtle);
+    background: var(--cream);
+    padding: 0 1mm;
+    line-height: 1;
+  }
+  .curiosity-text {
+    font-family: var(--font-serif);
+    font-size: 7pt;
+    color: var(--ink-mid);
+    font-style: italic;
+    line-height: 1.55;
+  }
+
+  /* ===============================
+     STRONA PRAWA
+     =============================== */
+  .page-right .page-content {
+    padding: 11mm 13mm 9mm 10mm;
+  }
+
+  .right-title-block { margin-bottom: 1.5mm; flex-shrink: 0; }
+  .right-title-main {
+    font-family: var(--font-display);
+    font-size: 12pt;
+    color: var(--green-deep);
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    display: block;
+  }
+  .right-title-sub {
+    font-family: var(--font-serif);
+    font-size: 7.5pt;
+    font-style: italic;
+    color: var(--ink-muted);
+    display: block;
+    margin-top: 0.5mm;
+  }
+
+  /* Sekcje */
+  .section-block { margin-bottom: 2mm; flex-shrink: 0; }
+  .section-heading {
+    font-family: var(--font-serif);
+    font-size: 7pt;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--green-mid);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 2mm;
+    margin-bottom: 1.2mm;
+  }
+  .section-heading::after {
+    content: '';
+    flex: 1;
+    height: 0.3pt;
+    background: linear-gradient(90deg, var(--green-light), transparent);
+  }
+  .section-text {
+    font-family: var(--font-text);
+    font-size: 8pt;
+    color: var(--ink-mid);
+    line-height: 1.65;
+    text-align: justify;
+    hyphens: auto;
+  }
+  .section-text + .section-text { margin-top: 1.2mm; }
+  .section-text em { font-style: italic; color: var(--ink); }
+  .section-text strong { font-weight: 600; color: var(--ink); }
+
+  /* Dropcap */
+  .dropcap::first-letter {
+    font-family: var(--font-display);
+    font-size: 22pt;
+    float: left;
+    line-height: 0.72;
+    margin-right: 1.5mm;
+    margin-top: 1mm;
+    color: var(--green-deep);
+  }
+
+  /* Nota badacza */
+  .researcher-note {
+    margin-top: auto;
+    background: rgba(200,219,200,0.15);
+    border: 0.3pt solid rgba(154,123,58,0.3);
+    border-left: 2pt solid var(--green-mid);
+    padding: 2mm 2.5mm;
+    flex-shrink: 0;
+  }
+  .researcher-quote-mark {
+    font-family: var(--font-display);
+    font-size: 18pt;
+    color: var(--gold-light);
+    line-height: 0.6;
+    float: left;
+    margin-right: 1.5mm;
+    margin-top: 1mm;
+  }
+  .researcher-text {
+    font-family: var(--font-serif);
+    font-size: 7pt;
+    font-style: italic;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+  .researcher-attribution {
+    display: block;
+    margin-top: 1mm;
+    font-style: normal;
+    font-size: 6pt;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+    text-align: right;
+    font-family: var(--font-serif);
+  }
+
+  /* Badge */
+  .species-badge {
+    position: absolute;
+    bottom: 11mm; right: 11mm;
+    width: 10mm; height: 10mm;
+    border: 0.6pt solid var(--gold);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 12;
+    background: var(--cream);
+  }
+  .species-badge-num {
+    font-family: var(--font-display);
+    font-size: 10pt;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .species-badge-label {
+    font-family: var(--font-serif);
+    font-size: 4pt;
+    color: var(--ink-faint);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* SVG narożnik symbol */
+  .corner-svg-symbol { fill: none; stroke: #9a7b3a; }
+
+  @media print {
+    body { background: none; margin: 0; }
+    .spread { margin: 0; width: 100%; }
+    .page { page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+<div class="spread">
+
+  <!-- ===========================
+       STRONA LEWA
+       =========================== -->
+  <div class="page page-left">
+    <div class="page-border-outer"></div>
+    <div class="page-border-inner"></div>
+    <div class="corner corner-tl"><svg viewBox="0 0 48 48"><path class="corner-svg-symbol" stroke-width="1.4" d="M6 42 L6 6 L42 6"/><path class="corner-svg-symbol" stroke-width="0.6" stroke-dasharray="2.5,2" d="M6 24 Q6 6 24 6"/><circle cx="6" cy="6" r="2.2" fill="#9a7b3a"/><circle cx="24" cy="6" r="1.2" fill="none" stroke="#9a7b3a" stroke-width="0.8"/><circle cx="6" cy="24" r="1.2" fill="none" stroke="#9a7b3a" stroke-width="0.8"/></svg></div>
+    <div class="corner corner-tr"><svg viewBox="0 0 48 48"><path class="corner-svg-symbol" stroke-width="1.4" d="M6 42 L6 6 L42 6"/><circle cx="6" cy="6" r="2.2" fill="#9a7b3a"/></svg></div>
+    <div class="corner corner-bl"><svg viewBox="0 0 48 48"><path class="corner-svg-symbol" stroke-width="1.4" d="M6 42 L6 6 L42 6"/><circle cx="6" cy="6" r="2.2" fill="#9a7b3a"/></svg></div>
+    <div class="corner corner-br"><svg viewBox="0 0 48 48"><path class="corner-svg-symbol" stroke-width="1.4" d="M6 42 L6 6 L42 6"/><circle cx="6" cy="6" r="2.2" fill="#9a7b3a"/></svg></div>
+
+    <div class="page-content">
+      <div class="page-header">
+        <span class="chapter-label">Rodzina Bicerorostridae · Dwunosy Pustynne</span>
+        <span class="page-number">str. 12</span>
+      </div>
+
+      <!-- Ilustracja -->
+      <div class="illustration-frame">
+        <img src="glazozer.jpg" alt="Bicerorostrum lithophagus musculus – fotografia terenowa" />
+      </div>
+      <p class="illustration-caption">Bicerorostrum lithophagus musculus · Pustynia Kredowa, Kotlina Środkowa · godz. 12:47, pełne nasłonecznienie</p>
+
+      <div class="divider"></div>
+
+      <!-- Nazwa -->
+      <div class="species-name-block">
+        <span class="name-common">Wielorybnik Rozpęczniakowy Głazożerny</span>
+        <span class="name-latin">Bicerorostrum lithophagus musculus (Palm, 2026)</span>
+      </div>
+
+      <!-- Etymologia -->
+      <div class="etymology-block">
+        <span class="block-label">Etymologia</span>
+        <span class="etymology-text">
+          <em>bicero-</em> (łac./gr.) — dwa nosy; <em>-rostrum</em> — pysk, dziób;
+          <em>lithophagus</em> — głazożerny (<em>lithos</em> + <em>phagein</em>);
+          <em>musculus</em> — mocarny, wielorybio masywny.
+        </span>
+      </div>
+
+      <div class="divider-ornament"><span>✦</span></div>
+
+      <!-- Systematyka -->
+      <div class="taxonomy-block">
+        <span class="block-label">Systematyka</span>
+        <table class="taxonomy-table">
+          <tr><td>Królestwo</td><td>Animalia</td></tr>
+          <tr><td>Typ</td><td>Chordata</td></tr>
+          <tr><td>Podtyp</td><td>Vertebrata</td></tr>
+          <tr><td>Gromada</td><td>Sauropsida</td></tr>
+          <tr><td>Infragromada</td><td>Dinosauria</td></tr>
+          <tr><td>Rząd</td><td>Ornithischia</td></tr>
+          <tr><td>Nadrodzina</td><td>Lithopodoreptilia</td></tr>
+          <tr><td>Rodzina</td><td>Bicerorostridae</td></tr>
+          <tr><td>Rodzaj</td><td>Bicerorostrum</td></tr>
+          <tr><td>Gatunek</td><td><em>B. l. musculus</em></td></tr>
+        </table>
+      </div>
+
+      <!-- Dane ekologiczne + wymiary -->
+      <div class="data-grid">
+        <div class="data-cell">
+          <span class="data-label">Środowisko</span>
+          <span class="data-value">Pustynie skalne, kaniony, płaskowyże</span>
+        </div>
+        <div class="data-cell">
+          <span class="data-label">Dieta</span>
+          <span class="data-value">Sukulenty, krzewy kolczaste, głazy wapienne i krzemionkowe</span>
+        </div>
+        <div class="data-cell data-cell-wide">
+          <span class="data-label">Rozmiary i masa</span>
+          <span class="data-value">
+            Dł. ~9 m · Wys. ~3,2 m · Masa ~8 t
+            <em> — czyli mniej więcej tyle co średni autobus miejski, który ktoś postanowił oblec w skórę i wypuścić na pustynię</em>
+          </span>
+        </div>
+      </div>
+
+      <!-- Ciekawostka -->
+      <div class="curiosity-block">
+        <span class="block-label">Nota obserwatora</span>
+        <span class="curiosity-text">
+          Jedyny znany kręgowiec zjadający głazy <em>celowo</em> i z wyraźną satysfakcją.
+          Komisja ds. etologii trzy lata odmawiała publikacji wyników — ostatecznie
+          przekonały ją nagrania wideo. I odgłos chrupania w tle.
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===========================
+       STRONA PRAWA
+       =========================== -->
+  <div class="page page-right">
+    <div class="page-border-outer"></div>
+    <div class="page-border-inner"></div>
+    <div class="corner corner-tl"><svg viewBox="0 0 48 48"><path class="corner-svg-symbol" stroke-width="1.4" d="M6 42 L6 6 L42 6"/><path class="corner-svg-symbol" stroke-width="0.6" stroke-dasharray="2.5,2" d="M6 24 Q6 6 24 6"/><circle cx="6" cy="6" r="2.2" fill="#9a7b3a"/><circle cx="24" cy="6" r="1.2" fill="none" stroke="#9a7b3a" stroke-width="0.8"/><circle cx="6" cy="24" r="1.2" fill="none" stroke="#9a7b3a" stroke-width="0.8"/></svg></div>
+    <div class="corner corner-tr"><svg viewBox="0 0 48 48"><path class="corner-svg-symbol" stroke-width="1.4" d="M6 42 L6 6 L42 6"/><circle cx="6" cy="6" r="2.2" fill="#9a7b3a"/></svg></div>
+    <div class="corner corner-bl"><svg viewBox="0 0 48 48"><path class="corner-svg-symbol" stroke-width="1.4" d="M6 42 L6 6 L42 6"/><circle cx="6" cy="6" r="2.2" fill="#9a7b3a"/></svg></div>
+    <div class="corner corner-br"><svg viewBox="0 0 48 48"><path class="corner-svg-symbol" stroke-width="1.4" d="M6 42 L6 6 L42 6"/><circle cx="6" cy="6" r="2.2" fill="#9a7b3a"/></svg></div>
+
+    <div class="page-content">
+      <div class="page-header">
+        <span class="chapter-label">Wielorybnik Rozpęczniakowy Głazożerny</span>
+        <span class="page-number">str. 13</span>
+      </div>
+
+      <div class="right-title-block">
+        <span class="right-title-main">Opis Gatunku</span>
+        <span class="right-title-sub">Bicerorostrum lithophagus musculus · rodzina Bicerorostridae</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- SEKCJA 1 -->
+      <div class="section-block">
+        <div class="section-heading">Opis Gatunku</div>
+        <p class="section-text dropcap">
+          Wielorybnik rozpęczniakowy głazożerny jest, bez wątpienia, jednym z najbardziej
+          nieprawdopodobnych tworów ewolucji — zwierzęciem, które wygląda jak skała,
+          <em>zachowuje się jak skała</em>, a w chwilach szczególnego skupienia
+          <strong>zjada skałę</strong>. Jego masywny korpus, okryty grubą, napęczniałą skórą
+          w odcieniach piaskowego beżu, ochry i szarości, stanowi doskonały kamuflaż
+          w skalnym terenie — i byłby absolutnie niezawodny, gdyby nie charakterystyczne
+          <em>chrupanie</em>, słyszalne z odległości nawet trzystu metrów.
+        </p>
+        <p class="section-text" style="margin-top:1.2mm;">
+          Głowę zdobią dwa masywne, kostne wyrostki nosowe — tytułowe <em>dwunosy</em> —
+          wystające niczym skrócone rogi. Służą do rozbijania skał, walk terytorialnych
+          oraz, zdaniem obserwatorów, do wyrażania nastrojów: uniesione oznaczają
+          zadowolenie; opuszczone — że właśnie nadepnięto mu na stopę.
+        </p>
+      </div>
+
+      <div class="divider-ornament"><span>❧</span></div>
+
+      <!-- SEKCJA 2 -->
+      <div class="section-block">
+        <div class="section-heading">Miejsce Występowania</div>
+        <p class="section-text">
+          Gatunek zamieszkuje wyłącznie tereny, gdzie inna fauna <em>nie ma już nic do
+          stracenia</em>: rozległe, skrajnie suche pustynie z formacjami skalnymi,
+          wyschniętymi korytami rzek i płaskowyżami nagrzanymi do temperatur
+          zniechęcających nawet termometr. Roślinność jest szczątkowa — sporadyczne
+          formy kaktusopodobne i kolczaste krzewy, traktowane przez wielorybnika
+          jako <strong>lekka przekąska między posiłkami właściwymi</strong>, którymi są głazy.
+          Paradoksalnie środowisko to uznaje za wysoce przyjazne — konkurencja minimalna,
+          a kamieni nigdy nie brakuje.
+        </p>
+      </div>
+
+      <div class="divider-ornament"><span>❧</span></div>
+
+      <!-- SEKCJA 3 -->
+      <div class="section-block">
+        <div class="section-heading">Zachowanie i Tryb Życia</div>
+        <p class="section-text">
+          Wielorybnik prowadzi tryb życia, który najlepiej opisać jako <em>filozoficznie
+          spokojny</em>. Porusza się z godnością kogoś, kto nie ma powodów do pośpiechu,
+          pozostawiając odciski wielkości małej wanny. Dzień wypełnia selekcją głazów —
+          gatunek wykazuje udokumentowaną preferencję do skał wapiennych —
+          i ich <strong>miażdżeniem szczękami zdolnymi rozłupać blok betonu</strong>.
+          W sezonie godowym samce urządzają turnieje uderzeń dwunosami, hałaśliwe
+          jak roboty drogowe. Samice obserwują widowisko z dystansem sugerującym,
+          że <em>decyzję podjęły znacznie wcześniej</em>.
+          Młode przychodzą na świat w pełni uformowane — małe, chrupiące, zdeterminowane.
+        </p>
+      </div>
+
+      <!-- CYTAT BADACZA -->
+      <div class="researcher-note">
+        <span class="researcher-quote-mark">❝</span>
+        <p class="researcher-text">
+          Planowałam obserwację od wschodu słońca. Niestety budzik nie zagrał,
+          namiot zebrał poranny wiatr razem z notatkami terenowymi,
+          a jedynym zdjęciem z wyprawy jest rozmyte ujęcie własnego buta.
+          Zwierzę, jak zwykle, było zachwycające.
+          <span class="researcher-attribution">
+            — dr Patrycja Imaszewska-Palm,
+            <em>Sprawozdanie z Ekspedycji Kredowej,</em> rozdz. IV: „Rzeczy, które nie poszły zgodnie z planem" (2026)
+          </span>
+        </p>
+      </div>
+
+    </div>
+
+    <div class="species-badge">
+      <span class="species-badge-num">01</span>
+      <span class="species-badge-label">gatunek</span>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>
